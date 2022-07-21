@@ -68,41 +68,49 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
-#   test-frontend:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       # Restore from cache
-#       # Your job code here
-                
-#   test-backend:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       # Restore from cache
-#       # Your job code here
-  # checking security vulnerabilities with scan front-end and back-end          
-  scan-frontend:
+  test-frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - Checkout 
-      - restore_cache:
-          keys: [frontend-build]
+      - checkout
       - run:
-          name: Scan front-end
+          name: test-frontend
           command: |
             cd frontend
             npm install
-          # npm install oauth-sign@^0.9.0
-          # --audit-level parameter above specifies the minimum vulnerability level that will cause the command to fail. This option does not filter the report output, it simply changes the command's failure threshold.
-            npm audit --audit-level=critical
-
-  scan-backend:
+            npm run test
+                
+  test-backend:
     docker:
-      # Docker image here
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: test-backend
+          command: |
+            cd backend
+            npm install
+            npm run test
+  # checking security vulnerabilities with scan front-end and back-end          
+  # scan-frontend:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - Checkout 
+  #     - restore_cache:
+  #         keys: [frontend-build]
+  #     - run:
+  #         name: Scan front-end
+  #         command: |
+  #           cd frontend
+  #           npm install
+  #         # npm install oauth-sign@^0.9.0
+  #         # --audit-level parameter above specifies the minimum vulnerability level that will cause the command to fail. This option does not filter the report output, it simply changes the command's failure threshold.
+  #           npm audit --audit-level=critical
+
+  # scan-backend:
+    docker:
+      - image: circleci/node:13.8.0
     steps:
       - Checkout 
       - restore_cache:
@@ -288,14 +296,14 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      - scan-backend:
-           requires: [build-backend]
-      - scan-frontend:
+      - test-frontend:
           requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      # - scan-backend:
+      #      requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
