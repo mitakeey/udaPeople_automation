@@ -104,25 +104,23 @@ jobs:
           command: |
             cd frontend
             npm install
-          # npm install oauth-sign@^0.9.0
-          # --audit-level parameter above specifies the minimum vulnerability level that will cause the command to fail. This option does not filter the report output, it simply changes the command's failure threshold.
             npm audit --audit-level=critical
 
-  # scan-backend:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - Checkout 
-  #     - restore_cache:
-  #         keys: [backend-build]
-  #     - run:
-  #         name: Scan back-end
-  #         command: |
-  #           cd backend
-  #           npm install
-  #         # npm install oauth-sign@^0.9.0
-  #         # --audit-level parameter above specifies the minimum vulnerability level that will cause the command to fail. This option does not filter the report output, it simply changes the command's failure threshold.
-  #           npm audit --audit-level=critical
+  scan-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - Checkout 
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: Scan back-end
+          command: |
+            cd backend
+            npm install
+            npm audit --audit-level==critical 
+          # npm install oauth-sign@^0.9.0
+          # --audit-level parameter above specifies the minimum vulnerability level that will cause the command to fail. This option does not filter the report output, it simply changes the command's failure threshold.
 
 
 #   deploy-infrastructure:
@@ -300,8 +298,8 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-      # - scan-backend:
-      #      requires: [build-backend]
+      - scan-backend:
+           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
       # - deploy-infrastructure:
