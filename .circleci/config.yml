@@ -199,10 +199,10 @@ jobs:
       - image: python-alpine3.16
     steps:
       - checkout
-         run:
-          name: install dependencies
-          command: |
-            apk add --update --no-cache tar gzip nodejs npm aws-cli curl
+      - run:
+        name: install dependencies
+        command: |
+          apk add --update --no-cache tar gzip nodejs npm aws-cli curl
       - restore_cache:
           keys: [backend-build]
       - run:
