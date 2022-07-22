@@ -10,6 +10,10 @@ UdaPeople is a mock rerpresentation of the Udacity UdaPeople app, revolutionary 
 * This is a proposal documentation to get authorization to using CI/CD as an automation process to achive automation for the products.
 * This is a sales pitch that steps out of the technical roles and focuses on the business values in terms of costs and revenue
 2. ## Utilize Deployment Strategies to design and build CI/CD pipelines that support Continuous Delivery processes. ##
+* Build phase
+* test phase
+* Analyze phase
+* set up alerts incase of job fail
 3. ## Utilize a configuration management tool to accomplish deployment to cloud-based servers. ##
 4. ## Surface critical server errors for diagnosis using centralized structured logging. ##
 
