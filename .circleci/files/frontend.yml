@@ -18,7 +18,7 @@ Resources:
   
   WebsiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
-    Properties:
+    Properties: 
       Bucket: !Ref 'WebsiteBucket'
       PolicyDocument:
         Statement:
