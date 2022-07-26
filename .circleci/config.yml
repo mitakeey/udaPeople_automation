@@ -204,7 +204,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/backend
+            - [project/backend]
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -332,15 +332,15 @@ jobs:
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo $API_URL
-            if curl -s --connect-timeout 5 "${API_URL}/api/status" | grep "ok"; then return 0; else return 1; fi
+            if curl -s "${API_URL}/api/status" | grep "ok"; then return 0; else return 1; fi
       - run:
           name: Frontend smoke test.
           command: |
             export URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/#/employees"            
             echo $URL
             if curl ${URL} | grep "Welcome"; then return 0; else return 1; fi
-      # - destroy-environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
