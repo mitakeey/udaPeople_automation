@@ -165,42 +165,42 @@ jobs:
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}  
         
-  # configure-infrastructure:
-  #   docker:
-  #     - image: python:3.7-alpine3.16
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: ["b1:7e:f1:92:a5:8e:22:7f:f4:a2:9e:44:65:63:aa:37"]
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           apk add --update --no-cache tar gzip ansible aws-cli
-  #     - attach_workspace:
-  #         at: ~/
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # add environment variables to server
-  #           echo ENVIRONMENT=production > backend/.env
-  #           echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
-  #           echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
-  #           echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> backend/.env
-  #           echo TYPEORM_HOST=$TYPEORM_HOST >> backend/.env
-  #           echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> backend/.env
-  #           echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> backend/.env
-  #           echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> backend/.env
-  #           echo TYPEORM_PORT=$TYPEORM_PORT >> backend/.env
-  #           echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> backend/.env
-  #           cat backend/.env
-  #           cd .circleci/ansible
-  #           ansible-playbook -i inventory.txt configure-server.yml
-  #     - persist_to_workspace:
-  #         root: ~/
-  #         paths:
-  #           - project/backend
-  #     - destroy-environment:
-  #         workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.16
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["b1:7e:f1:92:a5:8e:22:7f:f4:a2:9e:44:65:63:aa:37"]
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update --no-cache tar gzip ansible aws-cli
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            # # add environment variables to server
+            # echo ENVIRONMENT=production > backend/.env
+            # echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
+            # echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
+            # echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> backend/.env
+            # echo TYPEORM_HOST=$TYPEORM_HOST >> backend/.env
+            # echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> backend/.env
+            # echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> backend/.env
+            # echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> backend/.env
+            # echo TYPEORM_PORT=$TYPEORM_PORT >> backend/.env
+            # echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> backend/.env
+            # cat backend/.env
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/backend
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   # run-migrations:
   #   docker:
   #     - image: circleci/node:13.8.0 # safest to use to avoid migration errors
@@ -403,20 +403,20 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - scan-backend:
-          requires: [build-backend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      - configure-infrastructure
+          # requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-backend:
